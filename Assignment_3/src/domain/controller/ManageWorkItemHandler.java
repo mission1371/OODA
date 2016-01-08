@@ -1,5 +1,6 @@
 package domain.controller;
 
+import domain.EnumWorkItemAssignStatus;
 import domain.EnumWorkItemPriority;
 import domain.EnumWorkItemStatus;
 import domain.WorkItem;
@@ -62,6 +63,10 @@ public class ManageWorkItemHandler {
 
     public String[] getPriorityLabels() {
         return EnumWorkItemPriority.getTextLabels();
+    }
+
+    public String[] getAssignedStatusLabels() {
+        return EnumWorkItemAssignStatus.getTextLabels();
     }
 
 }

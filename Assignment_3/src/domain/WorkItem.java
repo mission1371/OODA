@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import domain.store.ADataManagerFactory;
 import domain.store.IDataManager;
+import domain.utility.DataUtility;
 
 /**
  * @author umut.taherzadeh
@@ -24,6 +25,9 @@ public class WorkItem implements Serializable {
     private String iterationId;
     private String plannedStartDate;
     private String completionDate;
+    private int estimatedEffort;
+    private EnumWorkItemAssignStatus assignedStatus;
+    private String predecessor;
 
     private IDataManager store;
 
@@ -96,8 +100,38 @@ public class WorkItem implements Serializable {
         this.completionDate = completionDate;
     }
 
+    public EnumWorkItemAssignStatus getAssignedStatus() {
+        return assignedStatus;
+    }
+
+    public void setAssignedStatus(EnumWorkItemAssignStatus assignedStatus) {
+        this.assignedStatus = assignedStatus;
+    }
+
+    public int getEstimatedEffort() {
+        return estimatedEffort;
+    }
+
+    public void setEstimatedEffort(int estimatedEffort) {
+        this.estimatedEffort = estimatedEffort;
+    }
+
+    public String getPredecessor() {
+        return predecessor;
+    }
+
+    public void setPredecessor(String predecessor) {
+        this.predecessor = predecessor;
+    }
+
+    /*
+     * 
+     * 
+     * ------------------------------ Store Methods ----------------------
+     */
+
     public String[] getFieldNames() {
-        return new String[] { "Name", "Description", "Status", "Priority", "Iteration ID", "Planned Start Date", "Complition Date", "Id" };
+        return new String[] { "Name", "Description", "Status", "Priority", "Is Assigned", "Estimated Effort", "Iteration ID", "Planned Start Date", "Complition Date", "Id" };
     }
 
     public String[][] getWorkItemsFromFile(String projectId) throws Exception {
@@ -108,12 +142,14 @@ public class WorkItem implements Serializable {
 
     public void saveWorkItem(WorkItem workItem) throws Exception {
 
+        checkNull(workItem);
         store.save(workItem);
 
     }
 
     public void updateWorkItem(WorkItem workItem) throws Exception {
 
+        checkNull(workItem);
         store.update(workItem);
 
     }
@@ -127,6 +163,41 @@ public class WorkItem implements Serializable {
     public WorkItem getWorkItemFromFile(String workItemId) throws Exception {
 
         return (WorkItem) store.select(workItemId);
+    }
+
+    /*
+     * 
+     * 
+     * 
+     * --------------------------------- PRIVATE ------------------------------
+     */
+    private void checkNull(WorkItem item) throws Exception {
+
+        DataUtility.isNull(item);
+        DataUtility.isNull(item.getId());
+        DataUtility.isNull(item.getName());
+        DataUtility.isNull(item.getDescription());
+        DataUtility.isNull(item.getStatus());
+        DataUtility.isNull(item.getPriority());
+        DataUtility.isNull(item.getIterationId());
+        DataUtility.isNull(item.getAssignedStatus());
+        DataUtility.isNull(item.getEstimatedEffort());
+
+        if (item.getEstimatedEffort() <= 0) {
+            throw new Exception("Estimated effort must be greater than 0");
+        }
+        if (item.getAssignedStatus().getCode() == EnumWorkItemAssignStatus.ASSIGNED.getCode()) {
+            DataUtility.isEmpty(item.getPlannedStartDate());
+            DataUtility.isEmpty(item.getCompletionDate());
+        }
+
+        if (DataUtility.isNull(item.getPlannedStartDate(), false)) {
+            item.setPlannedStartDate("");
+        }
+
+        if (DataUtility.isNull(item.getCompletionDate(), false)) {
+            item.setCompletionDate("");
+        }
     }
 
 }

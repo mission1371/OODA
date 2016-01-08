@@ -43,15 +43,17 @@ public class WorkItemDataManager extends ADataManagerFactory {
             for (WorkItem item : workItems) {
 
                 // TODO implement reflection
-
+                
                 returnArr[i][0] = item.getName();
                 returnArr[i][1] = item.getDescription();
                 returnArr[i][2] = item.getStatus().getText();
                 returnArr[i][3] = item.getPriority().getText();
-                returnArr[i][4] = item.getIterationId();
-                returnArr[i][5] = item.getPlannedStartDate();
-                returnArr[i][6] = item.getCompletionDate();
-                returnArr[i][7] = item.getId();
+                returnArr[i][4] = item.getAssignedStatus().getText();
+                returnArr[i][5] = String.valueOf(item.getEstimatedEffort());
+                returnArr[i][6] = item.getIterationId();
+                returnArr[i][7] = item.getPlannedStartDate();
+                returnArr[i][8] = item.getCompletionDate();
+                returnArr[i][9] = item.getId();
 
                 i++;
             }

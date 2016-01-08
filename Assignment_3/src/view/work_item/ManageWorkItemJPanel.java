@@ -17,6 +17,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import domain.EnumScreenType;
+import domain.EnumWorkItemAssignStatus;
 import domain.EnumWorkItemPriority;
 import domain.EnumWorkItemStatus;
 import domain.WorkItem;
@@ -44,6 +45,7 @@ public class ManageWorkItemJPanel extends JPanel {
     private JTextField completionDate;
     private JComboBox<?> status;
     private JComboBox<?> priority;
+    private JComboBox<?> assignedStatus;
 
     private JButton btnSave;
     private JButton btnUpdate;
@@ -51,6 +53,11 @@ public class ManageWorkItemJPanel extends JPanel {
     private JButton btnCancel;
 
     private WorkItemListJPanel parentPage;
+    private JLabel lblAssignedStatus;
+    private JLabel lblEstimatedEffort;
+    private JTextField estimatedEffort;
+    private JLabel lblPredecessor;
+    private JTextField predecessor;
 
     public ManageWorkItemJPanel(JTabbedPane mainTab, EnumScreenType screenType, JPanel parentPanel) {
         this(mainTab, screenType, null, parentPanel);
@@ -74,14 +81,14 @@ public class ManageWorkItemJPanel extends JPanel {
         add(panel, BorderLayout.NORTH);
         GridBagLayout gbl_panel = new GridBagLayout();
         gbl_panel.columnWidths = new int[] { 20, 90, 100, 60, 90, 100, 20, 0 };
-        gbl_panel.rowHeights = new int[] { 25, 20, 20, 20, 20, 20, 20, 20, 20, 0 };
-        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-        gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+        gbl_panel.rowHeights = new int[] { 25, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 10, 0 };
+        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+        gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
         panel.setLayout(gbl_panel);
 
         JLabel lblId = new JLabel("Work Item ID");
         GridBagConstraints gbc_lblId = new GridBagConstraints();
-        gbc_lblId.anchor = GridBagConstraints.WEST;
+        gbc_lblId.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblId.insets = new Insets(0, 0, 5, 5);
         gbc_lblId.gridx = 1;
         gbc_lblId.gridy = 1;
@@ -92,7 +99,7 @@ public class ManageWorkItemJPanel extends JPanel {
         id.setMinimumSize(new Dimension(100, 20));
         id.setColumns(10);
         GridBagConstraints gbc_id = new GridBagConstraints();
-        gbc_id.anchor = GridBagConstraints.NORTHWEST;
+        gbc_id.fill = GridBagConstraints.HORIZONTAL;
         gbc_id.insets = new Insets(0, 0, 5, 5);
         gbc_id.gridx = 2;
         gbc_id.gridy = 1;
@@ -100,7 +107,7 @@ public class ManageWorkItemJPanel extends JPanel {
 
         JLabel lblIterationid = new JLabel("Iteration ID");
         GridBagConstraints gbc_lblIterationid = new GridBagConstraints();
-        gbc_lblIterationid.anchor = GridBagConstraints.WEST;
+        gbc_lblIterationid.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblIterationid.insets = new Insets(0, 0, 5, 5);
         gbc_lblIterationid.gridx = 4;
         gbc_lblIterationid.gridy = 1;
@@ -111,7 +118,7 @@ public class ManageWorkItemJPanel extends JPanel {
         iterationId.setMinimumSize(new Dimension(100, 20));
         iterationId.setColumns(10);
         GridBagConstraints gbc_iterationId = new GridBagConstraints();
-        gbc_iterationId.anchor = GridBagConstraints.NORTHWEST;
+        gbc_iterationId.fill = GridBagConstraints.HORIZONTAL;
         gbc_iterationId.insets = new Insets(0, 0, 5, 5);
         gbc_iterationId.gridx = 5;
         gbc_iterationId.gridy = 1;
@@ -119,7 +126,7 @@ public class ManageWorkItemJPanel extends JPanel {
 
         JLabel lblName = new JLabel("Name");
         GridBagConstraints gbc_lblName = new GridBagConstraints();
-        gbc_lblName.anchor = GridBagConstraints.WEST;
+        gbc_lblName.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblName.insets = new Insets(0, 0, 5, 5);
         gbc_lblName.gridx = 1;
         gbc_lblName.gridy = 3;
@@ -130,7 +137,7 @@ public class ManageWorkItemJPanel extends JPanel {
         name.setMinimumSize(new Dimension(100, 20));
         name.setColumns(10);
         GridBagConstraints gbc_name = new GridBagConstraints();
-        gbc_name.anchor = GridBagConstraints.NORTHWEST;
+        gbc_name.fill = GridBagConstraints.HORIZONTAL;
         gbc_name.insets = new Insets(0, 0, 5, 5);
         gbc_name.gridx = 2;
         gbc_name.gridy = 3;
@@ -138,7 +145,7 @@ public class ManageWorkItemJPanel extends JPanel {
 
         JLabel lblDescription = new JLabel("Description");
         GridBagConstraints gbc_lblDescription = new GridBagConstraints();
-        gbc_lblDescription.anchor = GridBagConstraints.WEST;
+        gbc_lblDescription.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblDescription.insets = new Insets(0, 0, 5, 5);
         gbc_lblDescription.gridx = 4;
         gbc_lblDescription.gridy = 3;
@@ -149,7 +156,7 @@ public class ManageWorkItemJPanel extends JPanel {
         description.setMinimumSize(new Dimension(100, 20));
         description.setColumns(10);
         GridBagConstraints gbc_description = new GridBagConstraints();
-        gbc_description.anchor = GridBagConstraints.NORTHWEST;
+        gbc_description.fill = GridBagConstraints.HORIZONTAL;
         gbc_description.insets = new Insets(0, 0, 5, 5);
         gbc_description.gridx = 5;
         gbc_description.gridy = 3;
@@ -157,7 +164,7 @@ public class ManageWorkItemJPanel extends JPanel {
 
         JLabel lblStatus = new JLabel("Status");
         GridBagConstraints gbc_lblStatus = new GridBagConstraints();
-        gbc_lblStatus.anchor = GridBagConstraints.WEST;
+        gbc_lblStatus.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblStatus.insets = new Insets(0, 0, 5, 5);
         gbc_lblStatus.gridx = 1;
         gbc_lblStatus.gridy = 5;
@@ -167,7 +174,7 @@ public class ManageWorkItemJPanel extends JPanel {
         status.setPreferredSize(new Dimension(100, 20));
         status.setMinimumSize(new Dimension(100, 20));
         GridBagConstraints gbc_status = new GridBagConstraints();
-        gbc_status.anchor = GridBagConstraints.NORTHWEST;
+        gbc_status.fill = GridBagConstraints.HORIZONTAL;
         gbc_status.insets = new Insets(0, 0, 5, 5);
         gbc_status.gridx = 2;
         gbc_status.gridy = 5;
@@ -185,7 +192,7 @@ public class ManageWorkItemJPanel extends JPanel {
         priority.setPreferredSize(new Dimension(100, 20));
         priority.setMinimumSize(new Dimension(100, 20));
         GridBagConstraints gbc_priority = new GridBagConstraints();
-        gbc_priority.anchor = GridBagConstraints.NORTHWEST;
+        gbc_priority.fill = GridBagConstraints.HORIZONTAL;
         gbc_priority.insets = new Insets(0, 0, 5, 5);
         gbc_priority.gridx = 5;
         gbc_priority.gridy = 5;
@@ -193,7 +200,7 @@ public class ManageWorkItemJPanel extends JPanel {
 
         JLabel lblPlannedStartDate = new JLabel("Planned Start Date");
         GridBagConstraints gbc_lblPlannedStartDate = new GridBagConstraints();
-        gbc_lblPlannedStartDate.anchor = GridBagConstraints.WEST;
+        gbc_lblPlannedStartDate.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblPlannedStartDate.insets = new Insets(0, 0, 5, 5);
         gbc_lblPlannedStartDate.gridx = 1;
         gbc_lblPlannedStartDate.gridy = 7;
@@ -204,7 +211,7 @@ public class ManageWorkItemJPanel extends JPanel {
         plannedStartDate.setPreferredSize(new Dimension(100, 20));
         plannedStartDate.setColumns(10);
         GridBagConstraints gbc_plannedStartDate = new GridBagConstraints();
-        gbc_plannedStartDate.anchor = GridBagConstraints.NORTHWEST;
+        gbc_plannedStartDate.fill = GridBagConstraints.HORIZONTAL;
         gbc_plannedStartDate.insets = new Insets(0, 0, 5, 5);
         gbc_plannedStartDate.gridx = 2;
         gbc_plannedStartDate.gridy = 7;
@@ -212,7 +219,7 @@ public class ManageWorkItemJPanel extends JPanel {
 
         JLabel lblCompletionDate = new JLabel("Completion Date");
         GridBagConstraints gbc_lblCompletionDate = new GridBagConstraints();
-        gbc_lblCompletionDate.anchor = GridBagConstraints.WEST;
+        gbc_lblCompletionDate.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblCompletionDate.insets = new Insets(0, 0, 5, 5);
         gbc_lblCompletionDate.gridx = 4;
         gbc_lblCompletionDate.gridy = 7;
@@ -223,11 +230,67 @@ public class ManageWorkItemJPanel extends JPanel {
         completionDate.setMinimumSize(new Dimension(100, 20));
         completionDate.setColumns(10);
         GridBagConstraints gbc_completionDate = new GridBagConstraints();
+        gbc_completionDate.fill = GridBagConstraints.HORIZONTAL;
         gbc_completionDate.insets = new Insets(0, 0, 5, 5);
-        gbc_completionDate.anchor = GridBagConstraints.NORTHWEST;
         gbc_completionDate.gridx = 5;
         gbc_completionDate.gridy = 7;
         panel.add(completionDate, gbc_completionDate);
+
+        lblAssignedStatus = new JLabel("Is Assigned");
+        GridBagConstraints gbc_lblAssignedStatus = new GridBagConstraints();
+        gbc_lblAssignedStatus.fill = GridBagConstraints.HORIZONTAL;
+        gbc_lblAssignedStatus.insets = new Insets(0, 0, 5, 5);
+        gbc_lblAssignedStatus.gridx = 1;
+        gbc_lblAssignedStatus.gridy = 9;
+        panel.add(lblAssignedStatus, gbc_lblAssignedStatus);
+
+        assignedStatus = new JComboBox(handler.getAssignedStatusLabels());
+        assignedStatus.setPreferredSize(new Dimension(100, 20));
+        assignedStatus.setMinimumSize(new Dimension(100, 20));
+        GridBagConstraints gbc_assignedStatus = new GridBagConstraints();
+        gbc_assignedStatus.insets = new Insets(0, 0, 5, 5);
+        gbc_assignedStatus.fill = GridBagConstraints.HORIZONTAL;
+        gbc_assignedStatus.gridx = 2;
+        gbc_assignedStatus.gridy = 9;
+        panel.add(assignedStatus, gbc_assignedStatus);
+
+        lblEstimatedEffort = new JLabel("Estimated Effort");
+        GridBagConstraints gbc_lblEstimatedEffort = new GridBagConstraints();
+        gbc_lblEstimatedEffort.fill = GridBagConstraints.HORIZONTAL;
+        gbc_lblEstimatedEffort.insets = new Insets(0, 0, 5, 5);
+        gbc_lblEstimatedEffort.gridx = 4;
+        gbc_lblEstimatedEffort.gridy = 9;
+        panel.add(lblEstimatedEffort, gbc_lblEstimatedEffort);
+
+        estimatedEffort = new JTextField();
+        estimatedEffort.setMinimumSize(new Dimension(100, 20));
+        estimatedEffort.setPreferredSize(new Dimension(100, 20));
+        GridBagConstraints gbc_estimatedEffort = new GridBagConstraints();
+        gbc_estimatedEffort.insets = new Insets(0, 0, 5, 5);
+        gbc_estimatedEffort.fill = GridBagConstraints.HORIZONTAL;
+        gbc_estimatedEffort.gridx = 5;
+        gbc_estimatedEffort.gridy = 9;
+        panel.add(estimatedEffort, gbc_estimatedEffort);
+        estimatedEffort.setColumns(10);
+        
+        lblPredecessor = new JLabel("Predecessor");
+        lblPredecessor.setToolTipText("Write work item ids with dash (-) delimiter to seperate ids. ( e.g. 1-2-3)");
+        GridBagConstraints gbc_lblPredecessor = new GridBagConstraints();
+        gbc_lblPredecessor.fill = GridBagConstraints.HORIZONTAL;
+        gbc_lblPredecessor.insets = new Insets(0, 0, 5, 5);
+        gbc_lblPredecessor.gridx = 1;
+        gbc_lblPredecessor.gridy = 11;
+        panel.add(lblPredecessor, gbc_lblPredecessor);
+        
+        predecessor = new JTextField();
+        predecessor.setToolTipText("Write work item ids with dash (-) delimiter to seperate ids. ( e.g. 1-2-3)");
+        GridBagConstraints gbc_predecessor = new GridBagConstraints();
+        gbc_predecessor.insets = new Insets(0, 0, 5, 5);
+        gbc_predecessor.fill = GridBagConstraints.HORIZONTAL;
+        gbc_predecessor.gridx = 2;
+        gbc_predecessor.gridy = 11;
+        panel.add(predecessor, gbc_predecessor);
+        predecessor.setColumns(10);
 
         JPanel panel_1 = new JPanel();
         add(panel_1, BorderLayout.SOUTH);
@@ -324,9 +387,12 @@ public class ManageWorkItemJPanel extends JPanel {
         item.setDescription(description.getText());
         item.setStatus(EnumWorkItemStatus.getByText(status.getSelectedItem().toString()));
         item.setPriority(EnumWorkItemPriority.getByText(priority.getSelectedItem().toString()));
+        item.setAssignedStatus(EnumWorkItemAssignStatus.getByText(assignedStatus.getSelectedItem().toString()));
         item.setIterationId(iterationId.getText());
         item.setPlannedStartDate(plannedStartDate.getText());
         item.setCompletionDate(completionDate.getText());
+        item.setEstimatedEffort(Integer.valueOf(estimatedEffort.getText()));
+        item.setPredecessor(predecessor.getText());
 
         return item;
     }
@@ -341,6 +407,9 @@ public class ManageWorkItemJPanel extends JPanel {
         this.completionDate.setText(item.getCompletionDate());
         this.status.setSelectedItem(item.getStatus().getText());
         this.priority.setSelectedItem(item.getPriority().getText());
+        this.assignedStatus.setSelectedItem(item.getAssignedStatus().getText());
+        this.estimatedEffort.setText(String.valueOf(item.getEstimatedEffort()));
+        this.predecessor.setText(item.getPredecessor());
 
     }
 

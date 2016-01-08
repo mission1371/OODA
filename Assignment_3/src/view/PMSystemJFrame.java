@@ -146,7 +146,7 @@ public class PMSystemJFrame extends JFrame {
 
         // set the jframe height and width
         // setPreferredSize(new Dimension(width, height));
-        setPreferredSize(new Dimension(600, 350));
+        setPreferredSize(new Dimension(700, 500));
         pack();
 
     }
