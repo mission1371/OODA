@@ -18,7 +18,6 @@ import javax.swing.border.EmptyBorder;
 
 import view.developer.DeveloperListJPanel;
 import view.project.ProjectListJPanel;
-import view.work_item.WorkItemListJPanel;
 import domain.ProjectManagementSystem;
 import domain.store.ADataManagerFactory;
 
@@ -121,21 +120,21 @@ public class PMSystemJFrame extends JFrame {
         gbc_btnManageDevelopers.gridy = 2;
         useCase.add(btnManageDevelopers, gbc_btnManageDevelopers);
 
-        JButton btnManageWorkItems = new JButton("Manage Work Items");
-        btnManageWorkItems.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                WorkItemListJPanel panel = new WorkItemListJPanel(tabbedPane);
-                tabbedPane.addTab("Work Items", panel);
-                tabbedPane.setSelectedComponent(panel);
-            }
-        });
-        GridBagConstraints gbc_btnManageWorkItems = new GridBagConstraints();
-        gbc_btnManageWorkItems.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnManageWorkItems.insets = new Insets(0, 0, 0, 5);
-        gbc_btnManageWorkItems.gridx = 1;
-        gbc_btnManageWorkItems.gridy = 3;
-        useCase.add(btnManageWorkItems, gbc_btnManageWorkItems);
+//        JButton btnManageWorkItems = new JButton("Manage Work Items");
+//        btnManageWorkItems.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//
+//                WorkItemListJPanel panel = new WorkItemListJPanel(tabbedPane);
+//                tabbedPane.addTab("Work Items", panel);
+//                tabbedPane.setSelectedComponent(panel);
+//            }
+//        });
+//        GridBagConstraints gbc_btnManageWorkItems = new GridBagConstraints();
+//        gbc_btnManageWorkItems.fill = GridBagConstraints.HORIZONTAL;
+//        gbc_btnManageWorkItems.insets = new Insets(0, 0, 0, 5);
+//        gbc_btnManageWorkItems.gridx = 1;
+//        gbc_btnManageWorkItems.gridy = 3;
+//        useCase.add(btnManageWorkItems, gbc_btnManageWorkItems);
 
         // get the screen size as a java dimension
         // Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

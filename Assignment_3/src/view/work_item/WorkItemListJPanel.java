@@ -34,7 +34,7 @@ public class WorkItemListJPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public WorkItemListJPanel(JTabbedPane mainTab) {
+    public WorkItemListJPanel(JTabbedPane mainTab, String iterationId) {
 
         this.me = this;
         handler = ManageWorkItemHandler.getInstance();
@@ -49,7 +49,7 @@ public class WorkItemListJPanel extends JPanel {
             public void actionPerformed(ActionEvent arg0) {
 
                 try {
-                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.SAVE, me);
+                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.SAVE, me, iterationId);
                     mainTab.addTab("New Work Item", panel);
                     mainTab.setSelectedComponent(panel);
                 } catch (Exception e) {
@@ -64,7 +64,7 @@ public class WorkItemListJPanel extends JPanel {
         btnUpdate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.UPDATE, getSelectedWorkItemId(), me);
+                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.UPDATE, getSelectedWorkItemId(), me, iterationId);
                     mainTab.addTab("Update Work Item", panel);
                     mainTab.setSelectedComponent(panel);
                 } catch (Exception e) {
@@ -80,7 +80,7 @@ public class WorkItemListJPanel extends JPanel {
         btnView.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.VIEW, getSelectedWorkItemId(), me);
+                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.VIEW, getSelectedWorkItemId(), me, iterationId);
                     mainTab.addTab("View Work Item", panel);
                     mainTab.setSelectedComponent(panel);
                 } catch (Exception ex) {
@@ -95,7 +95,7 @@ public class WorkItemListJPanel extends JPanel {
         btnDelete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.DELETE, getSelectedWorkItemId(), me);
+                    ManageWorkItemJPanel panel = new ManageWorkItemJPanel(mainTab, EnumScreenType.DELETE, getSelectedWorkItemId(), me, iterationId);
                     mainTab.addTab("Delete Work Item", panel);
                     mainTab.setSelectedComponent(panel);
                 } catch (Exception e) {
@@ -116,7 +116,7 @@ public class WorkItemListJPanel extends JPanel {
         panel.add(btnCancel);
 
         try {
-            initTable();
+            initTable(iterationId);
         } catch (Exception e) {
             openPopup(e.getMessage(), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class WorkItemListJPanel extends JPanel {
      * ---------------------------------PRIVATE---------------------------
      */
 
-    private void initTable() throws Exception {
+    private void initTable(String iterationId) throws Exception {
 
         JScrollPane scrollPane = new JScrollPane();
         add(scrollPane, BorderLayout.CENTER);
@@ -141,8 +141,8 @@ public class WorkItemListJPanel extends JPanel {
             }
         };
         workItemTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        // TODO fix manager id
-        workItemTable.setModel(new DefaultTableModel(handler.getWorkItemsFromFile("1"), handler.getWorkItemTableFieldNames()));
+
+        workItemTable.setModel(new DefaultTableModel(handler.getWorkItemsFromFile(iterationId), handler.getWorkItemTableFieldNames()));
         scrollPane.setViewportView(workItemTable);
 
     }

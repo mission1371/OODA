@@ -1,6 +1,11 @@
 package domain;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import domain.store.ADataManagerFactory;
 import domain.store.IDataManager;
@@ -134,15 +139,17 @@ public class WorkItem implements Serializable {
         return new String[] { "Name", "Description", "Status", "Priority", "Is Assigned", "Estimated Effort", "Iteration ID", "Planned Start Date", "Complition Date", "Id" };
     }
 
-    public String[][] getWorkItemsFromFile(String projectId) throws Exception {
+    public String[][] getWorkItemsFromFile(String iterationId) throws Exception {
 
-        return store.getObjectsFromFile(projectId);
+        return store.getObjectsFromFile(iterationId);
 
     }
 
     public void saveWorkItem(WorkItem workItem) throws Exception {
 
         checkNull(workItem);
+        checkPredecessor(workItem);
+        validateDates(workItem);
         store.save(workItem);
 
     }
@@ -150,6 +157,8 @@ public class WorkItem implements Serializable {
     public void updateWorkItem(WorkItem workItem) throws Exception {
 
         checkNull(workItem);
+        checkPredecessor(workItem);
+        validateDates(workItem);
         store.update(workItem);
 
     }
@@ -197,6 +206,57 @@ public class WorkItem implements Serializable {
 
         if (DataUtility.isNull(item.getCompletionDate(), false)) {
             item.setCompletionDate("");
+        }
+    }
+
+    private void validateDates(WorkItem workItem) throws Exception {
+
+        if (workItem.assignedStatus.getCode() == EnumWorkItemAssignStatus.ASSIGNED.getCode()) {
+            Date itemStartDate = new SimpleDateFormat("dd/MM/yyyy").parse(workItem.getPlannedStartDate());
+
+            String[] arr = workItem.getPredecessor().split("-");
+
+            for (String itemId : arr) {
+
+                WorkItem item = (WorkItem) store.select(itemId);
+                Date compDate = new SimpleDateFormat("dd/MM/yyyy").parse(item.getCompletionDate());
+
+                if (compDate.after(itemStartDate)) {
+                    throw new Exception("Work item's planned start date cannot be earlier than one of its predecessors.");
+                }
+            }
+
+        }
+    }
+
+    private void checkPredecessor(WorkItem workItem) throws Exception {
+
+        if (!DataUtility.isEmpty(workItem.getPredecessor(), false)) {
+
+            String[] arr = workItem.getPredecessor().split("-");
+            List<WorkItem> workItems = ADataManagerFactory.getSystemState().getWorkItems();
+            List<String> checkList = new ArrayList<String>();
+            Collections.addAll(checkList, arr);
+
+            for (String pre : arr) {
+                for (WorkItem item : workItems) {
+
+                    if (item.getId().equals(pre)) {
+                        // onceki work item için en date in boş olup olmaması
+
+                        if (DataUtility.isEmpty(item.getPlannedStartDate(), false) || DataUtility.isEmpty(item.getCompletionDate(), false)) {
+                            throw new Exception("Predecessors must have planned start date and completion date.");
+                        }
+
+                        checkList.remove(pre);
+                        continue;
+                    }
+                }
+
+            }
+            if (!checkList.isEmpty()) {
+                throw new Exception("One of the work items' id is not registered in the system.");
+            }
         }
     }
 

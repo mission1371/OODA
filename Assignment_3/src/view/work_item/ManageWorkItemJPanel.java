@@ -7,14 +7,21 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Formatter;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.text.DateFormatter;
 
 import domain.EnumScreenType;
 import domain.EnumWorkItemAssignStatus;
@@ -39,10 +46,10 @@ public class ManageWorkItemJPanel extends JPanel {
 
     private JTextField id;
     private JTextField name;
-    private JTextField plannedStartDate;
+    private JFormattedTextField plannedStartDate;
     private JTextField iterationId;
     private JTextField description;
-    private JTextField completionDate;
+    private JFormattedTextField completionDate;
     private JComboBox<?> status;
     private JComboBox<?> priority;
     private JComboBox<?> assignedStatus;
@@ -59,8 +66,8 @@ public class ManageWorkItemJPanel extends JPanel {
     private JLabel lblPredecessor;
     private JTextField predecessor;
 
-    public ManageWorkItemJPanel(JTabbedPane mainTab, EnumScreenType screenType, JPanel parentPanel) {
-        this(mainTab, screenType, null, parentPanel);
+    public ManageWorkItemJPanel(JTabbedPane mainTab, EnumScreenType screenType, JPanel parentPanel, String iterationId) {
+        this(mainTab, screenType, null, parentPanel, iterationId);
     }
 
     /**
@@ -68,7 +75,7 @@ public class ManageWorkItemJPanel extends JPanel {
      * 
      * @wbp.parser.constructor
      */
-    public ManageWorkItemJPanel(JTabbedPane mainTab, EnumScreenType screenType, String workItemId, JPanel parentPanel) {
+    public ManageWorkItemJPanel(JTabbedPane mainTab, EnumScreenType screenType, String workItemId, JPanel parentPanel, String iterationId) {
 
         this.mainTab = mainTab;
         this.parentPage = (WorkItemListJPanel) parentPanel;
@@ -113,16 +120,16 @@ public class ManageWorkItemJPanel extends JPanel {
         gbc_lblIterationid.gridy = 1;
         panel.add(lblIterationid, gbc_lblIterationid);
 
-        iterationId = new JTextField();
-        iterationId.setPreferredSize(new Dimension(100, 20));
-        iterationId.setMinimumSize(new Dimension(100, 20));
-        iterationId.setColumns(10);
+        this.iterationId = new JTextField();
+        this.iterationId.setPreferredSize(new Dimension(100, 20));
+        this.iterationId.setMinimumSize(new Dimension(100, 20));
+        this.iterationId.setColumns(10);
         GridBagConstraints gbc_iterationId = new GridBagConstraints();
         gbc_iterationId.fill = GridBagConstraints.HORIZONTAL;
         gbc_iterationId.insets = new Insets(0, 0, 5, 5);
         gbc_iterationId.gridx = 5;
         gbc_iterationId.gridy = 1;
-        panel.add(iterationId, gbc_iterationId);
+        panel.add(this.iterationId, gbc_iterationId);
 
         JLabel lblName = new JLabel("Name");
         GridBagConstraints gbc_lblName = new GridBagConstraints();
@@ -206,7 +213,8 @@ public class ManageWorkItemJPanel extends JPanel {
         gbc_lblPlannedStartDate.gridy = 7;
         panel.add(lblPlannedStartDate, gbc_lblPlannedStartDate);
 
-        plannedStartDate = new JTextField();
+        plannedStartDate = new JFormattedTextField(new DateFormatter(new SimpleDateFormat("dd/MM/yyyy")));
+        plannedStartDate.setToolTipText("Proper date format must be dd/MM/yyyy");
         plannedStartDate.setMinimumSize(new Dimension(100, 20));
         plannedStartDate.setPreferredSize(new Dimension(100, 20));
         plannedStartDate.setColumns(10);
@@ -225,7 +233,8 @@ public class ManageWorkItemJPanel extends JPanel {
         gbc_lblCompletionDate.gridy = 7;
         panel.add(lblCompletionDate, gbc_lblCompletionDate);
 
-        completionDate = new JTextField();
+        completionDate = new JFormattedTextField(new DateFormatter(new SimpleDateFormat("dd/MM/yyyy")));
+        completionDate.setToolTipText("Proper date format must be dd/MM/yyyy");
         completionDate.setPreferredSize(new Dimension(100, 20));
         completionDate.setMinimumSize(new Dimension(100, 20));
         completionDate.setColumns(10);
@@ -272,7 +281,7 @@ public class ManageWorkItemJPanel extends JPanel {
         gbc_estimatedEffort.gridy = 9;
         panel.add(estimatedEffort, gbc_estimatedEffort);
         estimatedEffort.setColumns(10);
-        
+
         lblPredecessor = new JLabel("Predecessor");
         lblPredecessor.setToolTipText("Write work item ids with dash (-) delimiter to seperate ids. ( e.g. 1-2-3)");
         GridBagConstraints gbc_lblPredecessor = new GridBagConstraints();
@@ -281,7 +290,7 @@ public class ManageWorkItemJPanel extends JPanel {
         gbc_lblPredecessor.gridx = 1;
         gbc_lblPredecessor.gridy = 11;
         panel.add(lblPredecessor, gbc_lblPredecessor);
-        
+
         predecessor = new JTextField();
         predecessor.setToolTipText("Write work item ids with dash (-) delimiter to seperate ids. ( e.g. 1-2-3)");
         GridBagConstraints gbc_predecessor = new GridBagConstraints();
@@ -357,7 +366,7 @@ public class ManageWorkItemJPanel extends JPanel {
         try {
 
             if (EnumScreenType.SAVE.getCode() == screenType.getCode()) {
-                initSave();
+                initSave(iterationId);
             } else if (EnumScreenType.DELETE.getCode() == screenType.getCode()) {
                 initDelete(workItemId);
             } else if (EnumScreenType.UPDATE.getCode() == screenType.getCode()) {
@@ -413,10 +422,13 @@ public class ManageWorkItemJPanel extends JPanel {
 
     }
 
-    private void initSave() {
+    private void initSave(String iterationId) {
 
         btnDelete.setVisible(false);
         btnUpdate.setVisible(false);
+        this.iterationId.setText(iterationId);
+        this.iterationId.setEnabled(false);
+
     }
 
     private void initDelete(String workItemId) throws Exception {
@@ -465,10 +477,11 @@ public class ManageWorkItemJPanel extends JPanel {
 
     private void closeTab() {
 
+        String iterationId = this.iterationId.getText();
         mainTab.remove(mainTab.getSelectedComponent());
         mainTab.remove(parentPage);
 
-        WorkItemListJPanel panel = new WorkItemListJPanel(mainTab);
+        WorkItemListJPanel panel = new WorkItemListJPanel(mainTab, iterationId);
         mainTab.addTab("Work Items", panel);
         mainTab.setSelectedComponent(panel);
 

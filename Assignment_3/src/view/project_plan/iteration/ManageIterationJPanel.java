@@ -15,10 +15,14 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import view.work_item.WorkItemListJPanel;
 import domain.EnumIterationStatus;
 import domain.EnumScreenType;
 import domain.Iteration;
 import domain.controller.ManageIterationHandler;
+
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 
 /**
  * @author umut - pc
@@ -51,6 +55,9 @@ public class ManageIterationJPanel extends JPanel {
     private JComboBox status;
     private JTextField phaseId;
     private JTextField id;
+    private JPanel panel_2;
+    private JPanel panel_3;
+    private JButton btnManageWorkItems;
 
     public ManageIterationJPanel(JTabbedPane mainTab, EnumScreenType screenType, JPanel parentPanel, String phaseId) {
         this(mainTab, screenType, null, parentPanel, phaseId);
@@ -67,11 +74,10 @@ public class ManageIterationJPanel extends JPanel {
         this.parentPage = (IterationListJPanel) parentPanel;
 
         handler = ManageIterationHandler.getInstance();
-
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BorderLayout(0, 0));
 
         JPanel panel = new JPanel();
-        add(panel);
+        add(panel, BorderLayout.CENTER);
         GridBagLayout gbl_panel = new GridBagLayout();
         gbl_panel.columnWidths = new int[] { 20, 90, 100, 60, 90, 100, 20, 0 };
         gbl_panel.rowHeights = new int[] { 25, 20, 20, 20, 20, 20, 0 };
@@ -180,8 +186,27 @@ public class ManageIterationJPanel extends JPanel {
         panel.add(evaluationCriteria, gbc_evaluationCriteria);
         evaluationCriteria.setColumns(10);
 
+        panel_2 = new JPanel();
+        add(panel_2, BorderLayout.SOUTH);
+        panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.Y_AXIS));
+
+        panel_3 = new JPanel();
+        panel_2.add(panel_3);
+        panel_3.setLayout(new BorderLayout(0, 0));
+
+        btnManageWorkItems = new JButton("Manage Work Items");
+        btnManageWorkItems.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                WorkItemListJPanel panel = new WorkItemListJPanel(mainTab, iterationId);
+                mainTab.addTab("Work Items", panel);
+                mainTab.setSelectedComponent(panel);
+            }
+        });
+        panel_3.add(btnManageWorkItems, BorderLayout.EAST);
+
         JPanel panel_1 = new JPanel();
-        add(panel_1);
+        panel_2.add(panel_1);
 
         btnSave = new JButton("Save");
         btnSave.addActionListener(new ActionListener() {

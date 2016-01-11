@@ -30,11 +30,19 @@ public class WorkItemDataManager extends ADataManagerFactory {
     }
 
     @Override
-    public String[][] getObjectsFromFile(String managerId) throws Exception {
+    public String[][] getObjectsFromFile(String iterationId) throws Exception {
 
         String[][] returnArr = null;
 
-        ArrayList<WorkItem> workItems = getSystemState().getWorkItems();
+        ArrayList<WorkItem> workItems = new ArrayList<WorkItem>();
+        
+        for (WorkItem item : getSystemState().getWorkItems()) {
+            
+            if(item.getIterationId().equals(iterationId)){
+                workItems.add(item);
+            }
+        }
+        
 
         if (workItems != null && !workItems.isEmpty()) {
             returnArr = new String[workItems.size()][WorkItem.class.getDeclaredFields().length];

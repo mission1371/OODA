@@ -27,8 +27,8 @@ public class ManageWorkItemHandler {
         return instance;
     }
 
-    public String[][] getWorkItemsFromFile(String projectId) throws Exception {
-        return workItem.getWorkItemsFromFile(projectId);
+    public String[][] getWorkItemsFromFile(String iterationId) throws Exception {
+        return workItem.getWorkItemsFromFile(iterationId);
     }
 
     public String[] getWorkItemTableFieldNames() throws Exception {
