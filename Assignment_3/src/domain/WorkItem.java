@@ -33,6 +33,7 @@ public class WorkItem implements Serializable {
     private int estimatedEffort;
     private EnumWorkItemAssignStatus assignedStatus;
     private String predecessor;
+    private String developerId;
 
     private IDataManager store;
 
@@ -129,6 +130,14 @@ public class WorkItem implements Serializable {
         this.predecessor = predecessor;
     }
 
+    public String getDeveloperId() {
+        return developerId;
+    }
+
+    public void setDeveloperId(String developerId) {
+        this.developerId = developerId;
+    }
+
     /*
      * 
      * 
@@ -198,6 +207,11 @@ public class WorkItem implements Serializable {
         if (item.getAssignedStatus().getCode() == EnumWorkItemAssignStatus.ASSIGNED.getCode()) {
             DataUtility.isEmpty(item.getPlannedStartDate());
             DataUtility.isEmpty(item.getCompletionDate());
+            DataUtility.isEmpty(item.getDeveloperId(), "Developer ID can not be empty due to assignment status of work item.");
+        }
+        
+        if (item.getAssignedStatus().getCode() == EnumWorkItemAssignStatus.NOT_ASSIGNED.getCode()) {
+            item.setDeveloperId("");
         }
 
         if (DataUtility.isNull(item.getPlannedStartDate(), false)) {
@@ -214,18 +228,20 @@ public class WorkItem implements Serializable {
         if (workItem.assignedStatus.getCode() == EnumWorkItemAssignStatus.ASSIGNED.getCode()) {
             Date itemStartDate = new SimpleDateFormat("dd/MM/yyyy").parse(workItem.getPlannedStartDate());
 
-            String[] arr = workItem.getPredecessor().split("-");
+            if (!"".equals(workItem.getPredecessor())) {
 
-            for (String itemId : arr) {
+                String[] arr = workItem.getPredecessor().split("-");
 
-                WorkItem item = (WorkItem) store.select(itemId);
-                Date compDate = new SimpleDateFormat("dd/MM/yyyy").parse(item.getCompletionDate());
+                for (String itemId : arr) {
 
-                if (compDate.after(itemStartDate)) {
-                    throw new Exception("Work item's planned start date cannot be earlier than one of its predecessors.");
+                    WorkItem item = (WorkItem) store.select(itemId);
+                    Date compDate = new SimpleDateFormat("dd/MM/yyyy").parse(item.getCompletionDate());
+
+                    if (compDate.after(itemStartDate)) {
+                        throw new Exception("Work item's planned start date cannot be earlier than one of its predecessors.");
+                    }
                 }
             }
-
         }
     }
 

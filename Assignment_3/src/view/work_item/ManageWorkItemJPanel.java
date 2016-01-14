@@ -7,11 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Formatter;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -65,6 +61,8 @@ public class ManageWorkItemJPanel extends JPanel {
     private JTextField estimatedEffort;
     private JLabel lblPredecessor;
     private JTextField predecessor;
+    private JLabel lblDeveloperId;
+    private JTextField developerId;
 
     public ManageWorkItemJPanel(JTabbedPane mainTab, EnumScreenType screenType, JPanel parentPanel, String iterationId) {
         this(mainTab, screenType, null, parentPanel, iterationId);
@@ -301,6 +299,23 @@ public class ManageWorkItemJPanel extends JPanel {
         panel.add(predecessor, gbc_predecessor);
         predecessor.setColumns(10);
 
+        lblDeveloperId = new JLabel("Developer ID");
+        GridBagConstraints gbc_lblDeveloperId = new GridBagConstraints();
+        gbc_lblDeveloperId.anchor = GridBagConstraints.EAST;
+        gbc_lblDeveloperId.insets = new Insets(0, 0, 5, 5);
+        gbc_lblDeveloperId.gridx = 4;
+        gbc_lblDeveloperId.gridy = 11;
+        panel.add(lblDeveloperId, gbc_lblDeveloperId);
+
+        developerId = new JTextField();
+        GridBagConstraints gbc_developerId = new GridBagConstraints();
+        gbc_developerId.insets = new Insets(0, 0, 5, 5);
+        gbc_developerId.fill = GridBagConstraints.HORIZONTAL;
+        gbc_developerId.gridx = 5;
+        gbc_developerId.gridy = 11;
+        panel.add(developerId, gbc_developerId);
+        developerId.setColumns(10);
+
         JPanel panel_1 = new JPanel();
         add(panel_1, BorderLayout.SOUTH);
 
@@ -402,6 +417,7 @@ public class ManageWorkItemJPanel extends JPanel {
         item.setCompletionDate(completionDate.getText());
         item.setEstimatedEffort(Integer.valueOf(estimatedEffort.getText()));
         item.setPredecessor(predecessor.getText());
+        item.setDeveloperId(developerId.getText());
 
         return item;
     }
@@ -419,6 +435,7 @@ public class ManageWorkItemJPanel extends JPanel {
         this.assignedStatus.setSelectedItem(item.getAssignedStatus().getText());
         this.estimatedEffort.setText(String.valueOf(item.getEstimatedEffort()));
         this.predecessor.setText(item.getPredecessor());
+        this.developerId.setText(item.getDeveloperId());
 
     }
 
