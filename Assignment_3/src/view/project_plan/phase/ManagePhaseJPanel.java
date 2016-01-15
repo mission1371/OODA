@@ -46,8 +46,11 @@ public class ManagePhaseJPanel extends JPanel {
     private JButton btnUpdate;
     private JButton btnDelete;
     private JButton btnCancel;
+    private JButton btnManageIterations;
 
     private PhaseListJPanel parentPage;
+
+
 
     public ManagePhaseJPanel(JTabbedPane mainTab, EnumScreenType screenType, JPanel parentPanel, String projectId) {
         this(mainTab, screenType, null, parentPanel, projectId);
@@ -64,16 +67,14 @@ public class ManagePhaseJPanel extends JPanel {
         this.parentPage = (PhaseListJPanel) parentPanel;
 
         handler = ManagePhaseHandler.getInstance();
-
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BorderLayout(0, 0));
 
         JPanel panel = new JPanel();
-        add(panel);
+        add(panel, BorderLayout.CENTER);
         GridBagLayout gbl_panel = new GridBagLayout();
-        gbl_panel.columnWidths = new int[] { 20, 90, 100, 60, 90, 100, 20, 0, 0 };
-        gbl_panel.rowHeights = new int[] { 25, 20, 20, 20, 20, 20, 20, 20, 0 };
-        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE };
-        gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+        gbl_panel.columnWidths = new int[] {30, 90, 100, 60, 90, 100, 30, 0};
+        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0 };
+        gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
         panel.setLayout(gbl_panel);
 
         JLabel lblId = new JLabel("Phase ID");
@@ -111,6 +112,8 @@ public class ManagePhaseJPanel extends JPanel {
         this.projectId.setColumns(10);
 
         JLabel lblName = new JLabel("Name");
+        lblName.setPreferredSize(new Dimension(27, 20));
+        lblName.setMinimumSize(new Dimension(27, 20));
         GridBagConstraints gbc_lblName = new GridBagConstraints();
         gbc_lblName.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblName.insets = new Insets(0, 0, 5, 5);
@@ -128,6 +131,7 @@ public class ManagePhaseJPanel extends JPanel {
         name.setColumns(10);
 
         JLabel lblDescription = new JLabel("Description");
+        lblDescription.setPreferredSize(new Dimension(53, 20));
         GridBagConstraints gbc_lblDescription = new GridBagConstraints();
         gbc_lblDescription.fill = GridBagConstraints.HORIZONTAL;
         gbc_lblDescription.insets = new Insets(0, 0, 5, 5);
@@ -179,7 +183,7 @@ public class ManagePhaseJPanel extends JPanel {
         completionDate.setColumns(10);
 
         JPanel panel_1 = new JPanel();
-        add(panel_1);
+        add(panel_1, BorderLayout.SOUTH);
         panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 
         JPanel panel_2 = new JPanel();
@@ -188,7 +192,7 @@ public class ManagePhaseJPanel extends JPanel {
         panel_1.add(panel_2);
         panel_2.setLayout(new BorderLayout(0, 0));
 
-        JButton btnManageIterations = new JButton("Manage Iterations");
+        btnManageIterations = new JButton("Manage Iterations");
         btnManageIterations.setPreferredSize(new Dimension(150, 20));
         btnManageIterations.setMaximumSize(new Dimension(150, 20));
         panel_2.add(btnManageIterations, BorderLayout.EAST);
@@ -316,6 +320,9 @@ public class ManagePhaseJPanel extends JPanel {
 
         btnDelete.setVisible(false);
         btnUpdate.setVisible(false);
+        
+        btnManageIterations.setVisible(false);
+        
         this.projectId.setText(projectId);
         this.projectId.setEnabled(false);
     }

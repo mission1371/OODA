@@ -1,5 +1,6 @@
 package view.project_plan.iteration;
 
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -20,9 +21,6 @@ import domain.EnumIterationStatus;
 import domain.EnumScreenType;
 import domain.Iteration;
 import domain.controller.ManageIterationHandler;
-
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
 
 /**
  * @author umut - pc
@@ -320,7 +318,8 @@ public class ManageIterationJPanel extends JPanel {
 
         btnDelete.setVisible(false);
         btnUpdate.setVisible(false);
-
+        btnManageWorkItems.setVisible(false);
+        
         this.phaseId.setText(phaseId);
         this.phaseId.setEnabled(false);
 

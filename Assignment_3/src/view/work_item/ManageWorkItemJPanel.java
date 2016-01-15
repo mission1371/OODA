@@ -25,6 +25,7 @@ import domain.EnumWorkItemPriority;
 import domain.EnumWorkItemStatus;
 import domain.WorkItem;
 import domain.controller.ManageWorkItemHandler;
+import domain.utility.DataUtility;
 
 /**
  * @author umut.taherzadeh
@@ -402,7 +403,7 @@ public class ManageWorkItemJPanel extends JPanel {
      * ---------------------------------PRIVATE---------------------------
      */
 
-    private WorkItem collectWorkItem() {
+    private WorkItem collectWorkItem() throws Exception {
 
         WorkItem item = new WorkItem();
 
@@ -415,7 +416,13 @@ public class ManageWorkItemJPanel extends JPanel {
         item.setIterationId(iterationId.getText());
         item.setPlannedStartDate(plannedStartDate.getText());
         item.setCompletionDate(completionDate.getText());
-        item.setEstimatedEffort(Integer.valueOf(estimatedEffort.getText()));
+
+        if (DataUtility.isEmpty(estimatedEffort.getText(), false)) {
+            item.setEstimatedEffort(0);
+        } else {
+            item.setEstimatedEffort(Integer.valueOf(estimatedEffort.getText()));
+        }
+
         item.setPredecessor(predecessor.getText());
         item.setDeveloperId(developerId.getText());
 

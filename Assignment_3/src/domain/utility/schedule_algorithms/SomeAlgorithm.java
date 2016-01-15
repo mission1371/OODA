@@ -1,9 +1,10 @@
 package domain.utility.schedule_algorithms;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
-import domain.Project;
 import domain.WorkItem;
 import domain.store.ADataManagerFactory;
 import domain.store.IDataManager;
@@ -13,7 +14,12 @@ import domain.utility.DataUtility;
  * @author umut.taherzadeh
  *
  */
-public class SomeAlgorithm {// implements IScheduleAlgorithm {
+public class SomeAlgorithm implements IScheduleAlgorithm {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     private IDataManager store;
 
@@ -22,9 +28,8 @@ public class SomeAlgorithm {// implements IScheduleAlgorithm {
         this.store = (IDataManager) ADataManagerFactory.getDataManager(WorkItem.class.getSimpleName());
     }
 
-    // TODO düzelt
-    // @Override
-    public void scheduleAlgorithm(Project project, WorkItem item) throws Exception {
+    @Override
+    public void scheduleAlgorithm(WorkItem item) throws Exception {
 
         LocalDateTime today = LocalDateTime.now();
 
@@ -35,7 +40,26 @@ public class SomeAlgorithm {// implements IScheduleAlgorithm {
 
         } else {
 
-            
+            Date startDate = new Date();
+
+            String[] arr = item.getPredecessor().split("-");
+
+            for (String itemId : arr) {
+
+                WorkItem preItem = (WorkItem) store.select(itemId);
+                Date compDate = new SimpleDateFormat("dd/MM/yyyy").parse(preItem.getCompletionDate());
+
+                if (compDate.after(startDate)) {
+                    startDate = compDate;
+                }
+
+            }
+
+            LocalDateTime start = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+
+            item.setPlannedStartDate(arrangeDate(start));
+            item.setCompletionDate(arrangeDate(start.plusDays(4L)));
+
         }
 
     }
@@ -65,9 +89,15 @@ public class SomeAlgorithm {// implements IScheduleAlgorithm {
         return s_day + "/" + s_month + "/" + s_year;
     }
 
-    public static void main(String[] args) throws Exception {
-        SomeAlgorithm asd = new SomeAlgorithm();
+    // public static void main(String[] args) throws Exception {
+    // SomeAlgorithm asd = new SomeAlgorithm();
+    //
+    // asd.scheduleAlgorithm(new Project(), new WorkItem());
+    // }
 
-        asd.scheduleAlgorithm(new Project(), new WorkItem());
-    }
+    /*
+     * 
+     * Date in = new Date(); LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()); Date out =
+     * Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+     */
 }

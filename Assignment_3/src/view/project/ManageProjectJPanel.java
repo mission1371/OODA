@@ -51,6 +51,7 @@ public class ManageProjectJPanel extends JPanel {
     private JButton btnUpdate;
     private JButton btnDelete;
     private JButton btnCancel;
+    private JButton btnManageProjectPlan;
 
     private ProjectListJPanel parentPage;
 
@@ -68,7 +69,8 @@ public class ManageProjectJPanel extends JPanel {
         this.mainTab = mainTab;
         this.parentPage = (ProjectListJPanel) parentPanel;
 
-        handler = ManageProjectHandler.getInstance();;
+        handler = ManageProjectHandler.getInstance();
+        ;
 
         setLayout(new BorderLayout(0, 0));
 
@@ -246,7 +248,7 @@ public class ManageProjectJPanel extends JPanel {
         panel_2.add(panel_3);
         panel_3.setLayout(new BorderLayout(0, 0));
 
-        JButton btnManageProjectPlan = new JButton("Manage Project Plan");
+        btnManageProjectPlan = new JButton("Manage Project Plan");
         panel_3.add(btnManageProjectPlan, BorderLayout.EAST);
         btnManageProjectPlan.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -376,6 +378,8 @@ public class ManageProjectJPanel extends JPanel {
 
         btnDelete.setVisible(false);
         btnUpdate.setVisible(false);
+
+        btnManageProjectPlan.setVisible(false);
     }
 
     private void initDelete(String projectId) throws Exception {

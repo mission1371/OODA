@@ -1,15 +1,14 @@
 package domain.utility.schedule_algorithms;
 
-import java.util.List;
+import java.io.Serializable;
 
-import domain.Project;
 import domain.WorkItem;
 
 /**
  * @author umut.taherzadeh
  *
  */
-public interface IScheduleAlgorithm {
+public interface IScheduleAlgorithm extends Serializable {
 
-    void scheduleAlgorithm(Project project, List<WorkItem> items);
+    void scheduleAlgorithm(WorkItem items) throws Exception;
 }

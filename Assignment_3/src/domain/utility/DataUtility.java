@@ -6,12 +6,17 @@ package domain.utility;
  */
 public class DataUtility {
 
-    public static boolean isNull(Object obj, boolean throwException) throws Exception {
+    public static boolean isNull(Object obj, boolean throwException, String exceptionMsg) throws Exception {
 
+        
+        if ("".equals(exceptionMsg) || exceptionMsg == null) {
+            exceptionMsg = " argument is required; it must not be empty";
+        }
+        
         boolean returnCase = false;
         if (obj == null) {
             if (throwException) {
-                throw new IllegalArgumentException(" argument is required; it must not be null");
+                throw new IllegalArgumentException(exceptionMsg);
             }
             returnCase = true;
 
@@ -23,6 +28,14 @@ public class DataUtility {
 
     public static boolean isNull(Object obj) throws Exception {
         return isNull(obj, true);
+    }
+
+    public static boolean isNull(Object obj, String exceptionMsg) throws Exception {
+        return isNull(obj, true, exceptionMsg);
+    }
+
+    public static boolean isNull(Object obj, boolean throwException) throws Exception {
+        return isNull(obj, throwException, null);
     }
 
     public static boolean isEmpty(String str, boolean throwException, String exceptionMsg) throws Exception {

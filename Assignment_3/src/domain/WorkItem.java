@@ -10,6 +10,7 @@ import java.util.List;
 import domain.store.ADataManagerFactory;
 import domain.store.IDataManager;
 import domain.utility.DataUtility;
+import domain.utility.schedule_algorithms.IScheduleAlgorithm;
 
 /**
  * @author umut.taherzadeh
@@ -36,10 +37,12 @@ public class WorkItem implements Serializable {
     private String developerId;
 
     private IDataManager store;
+    private IScheduleAlgorithm schedule;
 
     public WorkItem() {
 
         this.store = (IDataManager) ADataManagerFactory.getDataManager(this.getClass().getSimpleName());
+        this.schedule = (IScheduleAlgorithm) ASystemFactory.getScheduleAlgorithm();
     }
 
     public String getId() {
@@ -156,18 +159,20 @@ public class WorkItem implements Serializable {
 
     public void saveWorkItem(WorkItem workItem) throws Exception {
 
-        checkNull(workItem);
         checkPredecessor(workItem);
         validateDates(workItem);
+        schedule.scheduleAlgorithm(workItem);
+        checkNull(workItem);
         store.save(workItem);
 
     }
 
     public void updateWorkItem(WorkItem workItem) throws Exception {
 
-        checkNull(workItem);
         checkPredecessor(workItem);
         validateDates(workItem);
+        schedule.scheduleAlgorithm(workItem);
+        checkNull(workItem);
         store.update(workItem);
 
     }
@@ -191,25 +196,25 @@ public class WorkItem implements Serializable {
      */
     private void checkNull(WorkItem item) throws Exception {
 
-        DataUtility.isNull(item);
-        DataUtility.isNull(item.getId());
-        DataUtility.isNull(item.getName());
-        DataUtility.isNull(item.getDescription());
-        DataUtility.isNull(item.getStatus());
-        DataUtility.isNull(item.getPriority());
-        DataUtility.isNull(item.getIterationId());
-        DataUtility.isNull(item.getAssignedStatus());
-        DataUtility.isNull(item.getEstimatedEffort());
+        DataUtility.isNull(item, "Work item can not be empty");
+        DataUtility.isNull(item.getId(), "Id of Work item can not be empty");
+        DataUtility.isNull(item.getName(), "Name of Work item can not be empty");
+        DataUtility.isNull(item.getDescription(), "Description of Work item can not be empty");
+        DataUtility.isNull(item.getStatus(), "Status of Work item can not be empty");
+        DataUtility.isNull(item.getPriority(), "Priority of Work item can not be empty");
+        DataUtility.isNull(item.getIterationId(), "Iteration Id of Work item can not be empty");
+        DataUtility.isNull(item.getAssignedStatus(), "Assignment status of Work item can not be empty");
+        DataUtility.isNull(item.getEstimatedEffort(), "Estimated effort of Work item can not be empty");
 
         if (item.getEstimatedEffort() <= 0) {
             throw new Exception("Estimated effort must be greater than 0");
         }
         if (item.getAssignedStatus().getCode() == EnumWorkItemAssignStatus.ASSIGNED.getCode()) {
-            DataUtility.isEmpty(item.getPlannedStartDate());
-            DataUtility.isEmpty(item.getCompletionDate());
+            DataUtility.isEmpty(item.getPlannedStartDate(), "Planned start date of Work item can not be empty due to assignment status of work item.");
+            DataUtility.isEmpty(item.getCompletionDate(), "Completion date of Work item can not be empty due to assignment status of work item.");
             DataUtility.isEmpty(item.getDeveloperId(), "Developer ID can not be empty due to assignment status of work item.");
         }
-        
+
         if (item.getAssignedStatus().getCode() == EnumWorkItemAssignStatus.NOT_ASSIGNED.getCode()) {
             item.setDeveloperId("");
         }
@@ -228,7 +233,7 @@ public class WorkItem implements Serializable {
         if (workItem.assignedStatus.getCode() == EnumWorkItemAssignStatus.ASSIGNED.getCode()) {
             Date itemStartDate = new SimpleDateFormat("dd/MM/yyyy").parse(workItem.getPlannedStartDate());
 
-            if (!"".equals(workItem.getPredecessor())) {
+            if (!DataUtility.isEmpty(workItem.getPredecessor(), false)) {
 
                 String[] arr = workItem.getPredecessor().split("-");
 
