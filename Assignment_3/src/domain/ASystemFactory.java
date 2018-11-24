@@ -51,7 +51,7 @@ public class ASystemFactory {
                 }
 
             } catch (IOException e) {
-                throw new Exception(e.getMessage());
+                throw new Exception("Properties file is missing");
             }
 
             algo = (IScheduleAlgorithm) Class.forName(clazz).newInstance();

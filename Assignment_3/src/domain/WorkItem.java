@@ -209,6 +209,7 @@ public class WorkItem implements Serializable {
         if (item.getEstimatedEffort() <= 0) {
             throw new Exception("Estimated effort must be greater than 0");
         }
+        
         if (item.getAssignedStatus().getCode() == EnumWorkItemAssignStatus.ASSIGNED.getCode()) {
             DataUtility.isEmpty(item.getPlannedStartDate(), "Planned start date of Work item can not be empty due to assignment status of work item.");
             DataUtility.isEmpty(item.getCompletionDate(), "Completion date of Work item can not be empty due to assignment status of work item.");
